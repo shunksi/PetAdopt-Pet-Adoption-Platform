@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #1c1f2a;
+
+  /* Brand palette, derived from the wireframe's slate-blue header / navy footer */
+  --color-brand-50: #eef1f8;
+  --color-brand-100: #d6ddec;
+  --color-brand-400: #6478a8;
+  --color-brand-500: #4f628e;
+  --color-brand-600: #3f4f74;
+  --color-brand-700: #2f3c59;
+  --color-brand-900: #1b2236;
+
+  --color-surface-muted: #d9d9d9;
+  --color-surface-soft: #f4f5f7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-900: var(--color-brand-900);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-surface-soft: var(--color-surface-soft);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
