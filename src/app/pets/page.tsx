@@ -1,9 +1,13 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PetCard from "@/components/PetCard";
-import { pets } from "@/lib/pets";
+import { getPets } from "@/lib/pets";
 
-export default function PetsPage() {
+
+
+
+export default async function PetsPage() {
+  const pets = await getPets();
   return (
     <>
       <Nav />
@@ -17,13 +21,20 @@ export default function PetsPage() {
               Every one of them is looking for a forever home.
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
-            {pets.map((pet) => (
-              <PetCard key={pet.slug} pet={pet} />
-            ))}
-          </div>
-        </section>
-      </main>
+          {pets.length === 0 ? (
+            <p className="text-center text-sm text-foreground/50">
+              No pets Yet - add one from admin dashboard.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+              {pets.map((pet) => (
+                <PetCard key={pet.id} pet={pet} />
+              ))}
+
+            </div>
+          )}
+        </section >
+      </main >
       <Footer />
     </>
   );
