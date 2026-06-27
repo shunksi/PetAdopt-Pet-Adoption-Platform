@@ -1,19 +1,19 @@
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { getPetBySlug, pets } from "@/lib/pets";
+import { getPetBySlug } from "@/lib/pets";
 
 interface PetPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return pets.map((pet) => ({ slug: pet.slug }));
-}
+// Pets are added/edited through /admin, so always fetch fresh - no static
+// generation/caching here (that's what generateStaticParams would do).
+export const dynamic = "force-dynamic";
 
 export default async function PetSubPage({ params }: PetPageProps) {
   const { slug } = await params;
-  const pet = getPetBySlug(slug);
+  const pet = await getPetBySlug(slug);
 
   if (!pet) {
     notFound();
@@ -41,44 +41,60 @@ export default async function PetSubPage({ params }: PetPageProps) {
             </div>
 
             <div className="space-y-6 p-8">
-              <h1 className="text-2xl font-bold text-brand-900">Meet {pet.name}</h1>
-
-              <section>
-                <h2 className="text-sm font-semibold text-brand-700">Short Bio</h2>
-                <p className="mt-1 text-sm leading-relaxed text-foreground/70">
-                  {pet.shortBio}
+              <div>
+                <h1 className="text-2xl font-bold text-brand-900">Meet {pet.name}</h1>
+                <p className="mt-1 text-sm text-foreground/60">
+                  {pet.age} {pet.age === 1 ? "year" : "years"} old
+                  {pet.breed ? ` · ${pet.breed}` : ""}
                 </p>
-              </section>
+              </div>
 
-              <section>
-                <h2 className="text-sm font-semibold text-brand-700">Where {"They're"} From</h2>
-                <p className="mt-1 text-sm leading-relaxed text-foreground/70">
-                  {pet.whereFrom}
-                </p>
-              </section>
+              {pet.shortBio && (
+                <section>
+                  <h2 className="text-sm font-semibold text-brand-700">Short Bio</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/70">
+                    {pet.shortBio}
+                  </p>
+                </section>
+              )}
 
-              <section>
-                <h2 className="text-sm font-semibold text-brand-700">Care Instructions</h2>
-                <ul className="mt-1 list-disc space-y-1 pl-5 text-sm leading-relaxed text-foreground/70">
-                  {pet.careInstructions.map((instruction, index) => (
-                    <li key={index}>{instruction}</li>
-                  ))}
-                </ul>
-              </section>
+              {pet.whereFrom && (
+                <section>
+                  <h2 className="text-sm font-semibold text-brand-700">Where {"They're"} From</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/70">
+                    {pet.whereFrom}
+                  </p>
+                </section>
+              )}
 
-              <section>
-                <h2 className="text-sm font-semibold text-brand-700">Personality Traits</h2>
-                <p className="mt-1 text-sm leading-relaxed text-foreground/70">
-                  {pet.personalityTraits}
-                </p>
-              </section>
+              {pet.careInstructions.length > 0 && (
+                <section>
+                  <h2 className="text-sm font-semibold text-brand-700">Care Instructions</h2>
+                  <ul className="mt-1 list-disc space-y-1 pl-5 text-sm leading-relaxed text-foreground/70">
+                    {pet.careInstructions.map((instruction, index) => (
+                      <li key={index}>{instruction}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
-              <section>
-                <h2 className="text-sm font-semibold text-brand-700">Fun Fact</h2>
-                <p className="mt-1 text-sm leading-relaxed text-foreground/70">
-                  {pet.funFact}
-                </p>
-              </section>
+              {pet.personalityTraits && (
+                <section>
+                  <h2 className="text-sm font-semibold text-brand-700">Personality Traits</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/70">
+                    {pet.personalityTraits}
+                  </p>
+                </section>
+              )}
+
+              {pet.funFact && (
+                <section>
+                  <h2 className="text-sm font-semibold text-brand-700">Fun Fact</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground/70">
+                    {pet.funFact}
+                  </p>
+                </section>
+              )}
             </div>
           </article>
         </div>
@@ -87,3 +103,4 @@ export default async function PetSubPage({ params }: PetPageProps) {
     </>
   );
 }
+
